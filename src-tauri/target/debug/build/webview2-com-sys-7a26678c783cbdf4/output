@@ -1,0 +1,1 @@
+cargo:rustc-link-search=native=C:\Programming\SudokoSolver\src-tauri\target\debug\build\webview2-com-sys-7a26678c783cbdf4\out\x64

@@ -1,0 +1,23 @@
+<html>
+<link rel="stylesheet" href="stylesheet.css">
+
+
+<div class="Center-Object" id="TableHolder">
+
+  <div id="Input">
+    <input class="Size" type="number" min=2 max=20 value=6 onchange="HandleSize(this)">
+    x
+    <input class="Size" type="number" min=2 max=20 value=5 onchange="HandleSize(this)">
+  </div>
+  <table id="MainTable">
+    <tr></tr>
+    <tr></tr>
+  </table>
+
+  <input type="button" value="Solve" onclick="beginSolve()">
+</div>
+
+<script type="text/javascript" src="UserAssist.js"></script>
+<script type="text/javascript" src="Solver.js"></script>
+
+</html>

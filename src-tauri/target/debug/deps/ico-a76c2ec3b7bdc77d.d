@@ -1,0 +1,12 @@
+C:\Programming\SudokoSolver\src-tauri\target\debug\deps\ico-a76c2ec3b7bdc77d.rmeta: C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\lib.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\macros.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\bmpdepth.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\icondir.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\image.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\restype.rs
+
+C:\Programming\SudokoSolver\src-tauri\target\debug\deps\libico-a76c2ec3b7bdc77d.rlib: C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\lib.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\macros.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\bmpdepth.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\icondir.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\image.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\restype.rs
+
+C:\Programming\SudokoSolver\src-tauri\target\debug\deps\ico-a76c2ec3b7bdc77d.d: C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\lib.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\macros.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\bmpdepth.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\icondir.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\image.rs C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\restype.rs
+
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\lib.rs:
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\macros.rs:
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\bmpdepth.rs:
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\icondir.rs:
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\image.rs:
+C:\Users\gameb\.cargo\registry\src\index.crates.io-6f17d22bba15001f\ico-0.3.0\src\restype.rs:
