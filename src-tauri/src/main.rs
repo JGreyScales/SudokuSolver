@@ -2,10 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(non_snake_case)]
 
-
-fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
+fn getValuesOnAxis(dataTable: &Vec<Vec<u8>>, x: usize, y: usize) -> (usize, Vec<u8>){
   let mut tempVec: Vec<u8> = vec![0; dataTable.len() * 3];
-  let mut IndexTracker: usize = 0;
+  let mut indexTracker: usize = 0;
 
   // Size of the array is a perfect square, we can assume the height is equal to the width
   // Therefore we handle both y and x based on the same index range
@@ -14,17 +13,26 @@ fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
     // Check each number in the x columnn
     let value: u8 = dataTable[Index][x];
     if !tempVec.contains(&value){
-      tempVec[IndexTracker] = value;
-      IndexTracker += 1;
+      tempVec[indexTracker] = value;
+      indexTracker += 1;
     }
 
     // Check each number in the y column
     let value: u8 = dataTable[y][Index];
     if !tempVec.contains(&value){
-      tempVec[IndexTracker] = value;
-      IndexTracker += 1;
+      tempVec[indexTracker] = value;
+      indexTracker += 1;
     }
   }
+
+  return (indexTracker, tempVec);
+}
+
+
+fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
+  let returnValues: (usize, Vec<u8>) = getValuesOnAxis(&dataTable, x, y);
+  let mut indexTracker: usize = returnValues.0;
+  let mut tempVec: Vec<u8> = returnValues.1;
 
   // the predetermined width of box cells
   // error prone sizes, 3, 5, 7, 11, 13, 17
@@ -54,15 +62,46 @@ fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
     for boxY in 0..boxHeight as usize{
       let value: u8 = dataTable[boxY + startYIndex][boxX + startXIndex];
       if !tempVec.contains(&value){
-        tempVec[IndexTracker] = value;
-        IndexTracker += 1;
+        tempVec[indexTracker] = value;
+        indexTracker += 1;
+      }
+
+
+
+      // Consider other rows and columns within the same box to determine if there is a logical cancelation 
+      let mut boxValues: Vec<Vec<u8>> = Vec::new();
+      let boxResultValues = getValuesOnAxis(&dataTable, boxX, boxY);
+      boxValues.push(boxResultValues.1);
+
+      // Compile summed results of all sectors deteremined in boxResultValues.1
+      let mut summedValues: Vec<u8> = Vec::new();
+
+      for compiledValues in &boxValues{
+        for IndexPosition in 0..compiledValues.len(){
+          if summedValues.contains(&summedValues[IndexPosition]){
+            summedValues.push(compiledValues[IndexPosition]);
+          }
+        }
+      }
+
+      for value in summedValues{
+        let mut count: u8 = 0;
+        for valueVec in &boxValues{
+          if valueVec.contains(&value){
+            count += 1;
+          }
+        }
+
+        // If count = the datatable len - 1, then the only option is that number
+        if count == dataTable.len() as u8 - 1{
+          let mut returnVec: Vec<u8> = (0..dataTable.len() as u8 - 1).collect();
+          returnVec.retain(|&item| item != value);
+          return returnVec;
+        }
       }
     }
   }
-
-
   tempVec.retain(|&item| item != 0);
-
   tempVec
 
 }
