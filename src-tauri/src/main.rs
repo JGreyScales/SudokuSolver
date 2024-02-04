@@ -2,23 +2,24 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(non_snake_case)]
 
-fn getValuesOnAxis(dataTable: &Vec<Vec<u8>>, x: usize, y: usize) -> (usize, Vec<u8>){
-  let mut tempVec: Vec<u8> = vec![0; dataTable.len() * 3];
+
+fn getValuesOnAxis(localDataTable: &Vec<Vec<u8>>, x: usize, y: usize) -> (usize, Vec<u8>){
+  let mut tempVec: Vec<u8> = vec![0; localDataTable.len() * 3];
   let mut indexTracker: usize = 0;
 
   // Size of the array is a perfect square, we can assume the height is equal to the width
   // Therefore we handle both y and x based on the same index range
-  for Index in 0..dataTable.len(){
+  for Index in 0..localDataTable.len(){
 
     // Check each number in the x columnn
-    let value: u8 = dataTable[Index][x];
+    let value: u8 = localDataTable[Index][x];
     if !tempVec.contains(&value){
       tempVec[indexTracker] = value;
       indexTracker += 1;
     }
 
     // Check each number in the y column
-    let value: u8 = dataTable[y][Index];
+    let value: u8 = localDataTable[y][Index];
     if !tempVec.contains(&value){
       tempVec[indexTracker] = value;
       indexTracker += 1;
@@ -29,8 +30,11 @@ fn getValuesOnAxis(dataTable: &Vec<Vec<u8>>, x: usize, y: usize) -> (usize, Vec<
 }
 
 
-fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
-  let returnValues: (usize, Vec<u8>) = getValuesOnAxis(&dataTable, x, y);
+fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize, bleh: Vec<Vec<u8>>) -> Vec<u8>{
+  let mut returnValue: u8 = 0;
+
+  let returnValues: (usize, Vec<u8>) = getValuesOnAxis(&bleh, x, y);
+
   let mut indexTracker: usize = returnValues.0;
   let mut tempVec: Vec<u8> = returnValues.1;
 
@@ -58,51 +62,83 @@ fn getPossibleValues(dataTable: Vec<Vec<u8>>, x: usize, y: usize) -> Vec<u8>{
   // Compare values from all other boxes within the main box
   // If all other spots contain a value EXCEPT for current box
   // That value is the only valid answer
+
+  
+  // Compile summed results of all sectors determined in boxResultValues.1
+  let mut summedValues: Vec<u8> = Vec::new();
+  let mut count: u8 = 0;
+
+
   for boxX in 0..boxWidth  as usize{
     for boxY in 0..boxHeight as usize{
-      let value: u8 = dataTable[boxY + startYIndex][boxX + startXIndex];
-      if !tempVec.contains(&value){
-        tempVec[indexTracker] = value;
-        indexTracker += 1;
-      }
-
-
-
-      // Consider other rows and columns within the same box to determine if there is a logical cancelation 
-      let mut boxValues: Vec<Vec<u8>> = Vec::new();
-      let boxResultValues = getValuesOnAxis(&dataTable, boxX, boxY);
-      boxValues.push(boxResultValues.1);
-
-      // Compile summed results of all sectors deteremined in boxResultValues.1
-      let mut summedValues: Vec<u8> = Vec::new();
-
-      for compiledValues in &boxValues{
-        for IndexPosition in 0..compiledValues.len(){
-          if summedValues.contains(&summedValues[IndexPosition]){
-            summedValues.push(compiledValues[IndexPosition]);
+      if ((boxY + startYIndex) == y) && ((boxX + startXIndex) == x){
+        continue;
+      } else {
+        let value: u8 = dataTable[boxY + startYIndex][boxX + startXIndex];
+        if !tempVec.contains(&value){
+          tempVec[indexTracker] = value;
+          indexTracker += 1;
+        }
+        // Consider other rows and columns within the same box to determine if there is a logical cancelation 
+        let mut boxValues: Vec<Vec<u8>> = Vec::new();
+        
+        let boxResultValues = getValuesOnAxis(&bleh, boxX, boxY);
+        boxValues.push(boxResultValues.1);
+  
+  
+        //  This can prob be optimized to only 1x boxwidth and 1x boxheight to discover if we can lock in a value.
+        let comparisionVec = getValuesOnAxis(&bleh, x, y).1;
+        for compiledValues in &boxValues{
+          for IndexPosition in 0..compiledValues.len(){
+            let valueInQuestion: u8 = compiledValues[IndexPosition];
+            // Ensure that the value is not 0, ensure that the value is not an option for the box in question
+            if (valueInQuestion != 0) && (!comparisionVec.contains(&valueInQuestion)){
+              summedValues.push(valueInQuestion);
+            }
           }
         }
-      }
+  
+  
+  
+        // println!("{:?}", summedValues);
 
-      for value in summedValues{
-        let mut count: u8 = 0;
-        for valueVec in &boxValues{
-          if valueVec.contains(&value){
-            count += 1;
+  
+        for value in &summedValues{
+          for valueVec in &boxValues{
+            if valueVec.contains(&value){
+              count += 1;
+
+              println!("{}", count);
+
+              // If count = the datatable len - 1, then the only option is that number
+              if count == dataTable.len() as u8 - 1{
+                println!("Value:{} Count:{} X:{} Y:{}", value, count, boxX, boxY);
+                returnValue = *value;
+              }
+            }
           }
-        }
-
-        // If count = the datatable len - 1, then the only option is that number
-        if count == dataTable.len() as u8 - 1{
-          let mut returnVec: Vec<u8> = (0..dataTable.len() as u8 - 1).collect();
-          returnVec.retain(|&item| item != value);
-          return returnVec;
         }
       }
     }
   }
-  tempVec.retain(|&item| item != 0);
-  tempVec
+
+  if returnValue != 0{
+    let mut tempVec: Vec<u8> = vec![0; dataTable.len()];
+    for n in 1..=dataTable.len(){
+      if n as u8 != returnValue{
+        tempVec[n - 1] = n as u8;
+      }
+    }
+    println!("box elem used");
+    tempVec
+  } else{
+
+    println!("row & column elem used");
+    tempVec.retain(|&item| item != 0);
+    tempVec
+  }
+
+
 
 }
 
@@ -155,7 +191,8 @@ fn solve(mut dataTable: Vec<Vec<u8>>){
     for y in 0..maxIndex{
       for x in 0..maxIndex{
         if unsolvedSpots[y][x]{          
-          let results: Vec<u8> = parseResults(getPossibleValues(dataTable.clone(), x, y), maxIndex as u8);
+          let results: Vec<u8> = parseResults(getPossibleValues(dataTable.clone(), x, y, dataTable.clone()), maxIndex as u8);
+          print!("{:?}", results);
           if results.len() == 1 {
             dataTable[y][x] = results[0];
             println!("Selected:{} in position ({}, {})", results[0], x, y);
